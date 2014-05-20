@@ -14,5 +14,5 @@ app.post('/messages/receive', restService.receivedMessage);
 
 //app.get('/test', restService.test);
 
-app.listen(3000);
+app.listen(80);
 console.log('Started server!');
