@@ -124,6 +124,36 @@ module.exports = {
 		});
 	},
 
+	firstTimeUseV3: function(phoneNumber, twilioNumber) {
+		//Send an SMS text message
+		client.sendMessage({
+
+		    to: phoneNumber, // User phone number 
+		    from: twilioNumber, // Our Twilio number
+		    body: 'Good morning! Ready to be deliberate about your spending? Text us an amount when you choose to save on the little things throughout the day (skipping coffee).' // body of the SMS message
+
+		}, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+		    if (!err) { // "err" is an error received during the request, if any
+
+		        // "responseData" is a JavaScript object containing data received from Twilio.
+		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+		        //console.log(responseData.from); // outputs "+14506667788"
+		        //console.log(responseData.body); // outputs "word to your mother."
+		        var logmsg="Type: FTU "+"From:"+responseData.from+" Body:"+responseData.body+" Direction:"+responseData.direction+ "SID:"+responseData.sid+'\n';
+		        fs.appendFile('msglog.txt',logmsg, function (err) {
+		        	if (err) return console.log(err);
+		        });
+
+		    }
+		    else {
+		    	fs.appendFile('errlog.txt',err);
+		    }
+		});
+	},
+
 	confirmation: function(phoneNumber, twilioNumber, commitAmount) {
 		//Send an SMS text message
 		client.sendMessage({
@@ -191,6 +221,36 @@ module.exports = {
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
 		    body: 'Amazing! Just ' + utility.formatCurrency(leftToGo) + ' to go until you reach your goal of ' + utility.formatCurrency(commitAmount) + '. Text us when you save again!' // body of the SMS message
+
+		}, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+		    		    if (!err) { // "err" is an error received during the request, if any
+
+		        // "responseData" is a JavaScript object containing data received from Twilio.
+		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+		        //console.log(responseData.from); // outputs "+14506667788"
+		        //console.log(responseData.body); // outputs "word to your mother."
+		        var logmsg="Type: confirmSavings "+"From:"+responseData.from+" Body:"+responseData.body+" Direction:"+responseData.direction+ "SID:"+responseData.sid+'\n';
+		        fs.appendFile('msglog.txt',logmsg, function (err) {
+		        	if (err) return console.log(err);
+		        });
+
+		    }
+		    else {
+		    	fs.appendFile('errlog.txt',err);
+		    }
+		});	
+	},
+
+	confirmSavingsV3: function(phoneNumber, twilioNumber, savingsToday) {
+		//Send an SMS text message
+		client.sendMessage({
+
+		    to: phoneNumber, // User phone number 
+		    from: twilioNumber, // Our Twilio number
+		    body: 'Amazing! You have saved ' + utility.formatCurrency(savingsToday) + ' so far today.  Be sure to text us when you save again!' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -311,6 +371,36 @@ module.exports = {
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
 		    body: 'You saved ' + utility.formatCurrency(yesterdaySavings) + ' yesterday. That’s awesome! How much would you like to save today?' // body of the SMS message
+
+		}, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+		    		    if (!err) { // "err" is an error received during the request, if any
+
+		        // "responseData" is a JavaScript object containing data received from Twilio.
+		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+		        //console.log(responseData.from); // outputs "+14506667788"
+		        //console.log(responseData.body); // outputs "word to your mother."
+		        var logmsg="Type: dailyReminder "+"From:"+responseData.from+" Body:"+responseData.body+" Direction:"+responseData.direction+ "SID:"+responseData.sid+'\n';
+		        fs.appendFile('msglog.txt',logmsg, function (err) {
+		        	if (err) return console.log(err);
+		        });
+
+		    }
+		    else {
+		    	fs.appendFile('errlog.txt',err);
+		    }
+		});	
+	},
+
+	dailyReminderV3: function(phoneNumber, twilioNumber, yesterdaySavings) {
+		//Send an SMS text message
+		client.sendMessage({
+
+		    to: phoneNumber, // User phone number 
+		    from: twilioNumber, // Our Twilio number
+		    body: 'You saved ' + utility.formatCurrency(yesterdaySavings) + ' yesterday. That’s awesome! Let’s see if you can beat it today!' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
