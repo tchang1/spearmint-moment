@@ -1,3 +1,8 @@
+var UserService = require('./userService');
+var Database = require('./databaseCommunications');
+var Q = require('q');
+var sender = require('./momentMessages');
+
 module.exports = {
 
     signup: function(req, res) {
