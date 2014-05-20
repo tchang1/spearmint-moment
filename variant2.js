@@ -7,33 +7,13 @@ var sender = require('./momentMessages');
 
 // This number is linked to the URL http://ec2-54-204-109-189.compute-1.amazonaws.com/messages/receive/variant2
 var twilioNumber = '+14154634615';
+var variant = 'variant2';
 
 module.exports = {
 
     signup: function(req, res) {
         var number = req.params.number;
-        number = number.replace(/\D/g,'');
-        if (number.charAt(0) == '1') {
-            number = '+' + number;
-        }
-        else {
-            number = '+1' + number;
-        }
-        if (number.length == 12) {
-            Database.findOne('users', {number: number}).then(
-                function(success) {
-                    if (!success) {
-                        var user = UserService.createUser(number);
-                        console.log('Adding user: ' + number);
-                        Database.insert('users', user);
-                        sender.setUp(number, twilioNumber);
-                    }
-                }
-            );
-        }
-        else {
-            console.log("User entered an invalid number "+req.params.number);
-        }
+        UserService.createUser(number, variant);
         res.send('');
     },
 
