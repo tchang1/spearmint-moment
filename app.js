@@ -8,8 +8,8 @@ app.configure(function () {
     app.use(express.bodyParser());
 });
 
-app.post('/signup/:number', cors(), restService.signup);
-app.post('/messages/receive', restService.receivedMessage);
+app.post('/signup/:variant/:number', cors(), restService.signup);
+app.post('/messages/receive/:variant', restService.receivedMessage);
 //app.post('/message/receive', messages.receive);
 
 //app.get('/test', restService.test);
