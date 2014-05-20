@@ -4,12 +4,12 @@ var fs = require('fs');
 var utility = require('./utility');
 
 module.exports = {
-	setUp: function(phoneNumber) {
+	setUp: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber,
 		    body: 'Thanks for setting up Moment! We’ll send you your first reminder tomorrow morning. You can reply STOP at any time to opt-out. Love, the Mint team.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -34,12 +34,12 @@ module.exports = {
 		});
 	},
 
-	setUpResponse: function(phoneNumber) {
+	setUpResponse: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'We\'re excited too! Expect to hear from us tomorrow morning.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -64,12 +64,12 @@ module.exports = {
 		});
 	},
 
-	firstTimeUse: function(phoneNumber) {
+	firstTimeUse: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Good morning! Ready to be deliberate about your spending? Respond with an amount you plan to save today.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -94,12 +94,12 @@ module.exports = {
 		});
 	},
 
-	confirmation: function(phoneNumber, commitAmount) {
+	confirmation: function(phoneNumber, twilioNumber, commitAmount) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Great! Text us an amount when you choose to save on the little things (skipping coffee). We\'ll let you know how you are doing towards your goal of ' + utility.formatCurrency(commitAmount) // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -124,12 +124,12 @@ module.exports = {
 		});	
 	},
 
-	confirmSavings: function(phoneNumber, leftToGo, commitAmount) {
+	confirmSavings: function(phoneNumber, twilioNumber, leftToGo, commitAmount) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Amazing! Just ' + utility.formatCurrency(leftToGo) + ' to go until you reach your goal of ' + utility.formatCurrency(commitAmount) + '. Text us when you save again!' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -154,12 +154,12 @@ module.exports = {
 		});	
 	},
 
-	confirmSavingsGoalReached: function(phoneNumber, runningTotalSavings, commitAmount) {
+	confirmSavingsGoalReached: function(phoneNumber, twilioNumber, runningTotalSavings, commitAmount) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Congratulations! You reached your goal of ' + utility.formatCurrency(commitAmount) +' with a total savings of ' + utility.formatCurrency(runningTotalSavings) + ' so far today.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -184,12 +184,12 @@ module.exports = {
 		});	
 	},
 
-	commitError: function(phoneNumber) {
+	commitError: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Hmmm… we didn’t get that. Try again? Make sure to enter numbers for the amount you want to save. (For example, reply “10” to record you want to save $10.)' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -214,12 +214,12 @@ module.exports = {
 		});	
 	},
 
-	savingsError: function(phoneNumber) {
+	savingsError: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'Hmmm… we didn’t get that. Try again? Make sure to enter numbers for the amount you didn’t spend. (For example, reply “10” to record saving $10.)' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -244,12 +244,12 @@ module.exports = {
 		});	
 	},
  
- 	dailyReminder: function(phoneNumber, yesterdaySavings) {
+ 	dailyReminder: function(phoneNumber, twilioNumber, yesterdaySavings) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'You saved ' + utility.formatCurrency(yesterdaySavings) + ' yesterday. That’s awesome! How much would you like to save today?' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
@@ -274,12 +274,12 @@ module.exports = {
 		});	
 	},
 
-	final: function(phoneNumber, totalSavings) {
+	final: function(phoneNumber, twilioNumber, totalSavings) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
-		    from: '+14156826769', // Our Twilio number
+		    from: twilioNumber, // Our Twilio number
 		    body: 'You\'ve saved ' + utility.formatCurrency(totalSavings) + ' this week. Amazing! Thank you so much for participating in these savings Moments with us. If you would be willing to talk on phone with us about your experience reply \'Yes\'' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio

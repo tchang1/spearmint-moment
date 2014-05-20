@@ -1,7 +1,12 @@
+// This test variant is the no goal 
+
 var UserService = require('./userService');
 var Database = require('./databaseCommunications');
 var Q = require('q');
 var sender = require('./momentMessages');
+
+// This phone number is linked to the URL http://ec2-54-204-109-189.compute-1.amazonaws.com/messages/receive/variant3
+var twilioNumber = '+14157428555';
 
 module.exports = {
 
@@ -21,7 +26,7 @@ module.exports = {
                         var user = UserService.createUser(number);
                         console.log('Adding user: ' + number);
                         Database.insert('users', user);
-                        sender.setUp(number);
+                        sender.setUp(number, twilioNumber);
                     }
                 }
             );
@@ -48,22 +53,22 @@ module.exports = {
         UserService.hasReceivedFTU(phoneNumber).then(function(ftuSent) {
             if (ftuSent=="No") {
                 console.log("User responded before FTU sent, NOW PANIC AND FREAK OUT");
-                sender.setUpResponse(phoneNumber);
+                sender.setUpResponse(phoneNumber, twilioNumber);
             }
             else {
-                // If we successfully got a number from the user 
+                // If we successfully got a number from the user
                 UserService.hasRespondedToMostRecentPrompt(phoneNumber).then(
                     function(result){
                         if (isNaN(saveAmount)) { // If we cannot parse the message to get a number
                             if (result =="No") {
                                 //has not commited
                                 console.log("sending commit error");
-                                sender.commitError(phoneNumber);
+                                sender.commitError(phoneNumber, twilioNumber);
                             }
                             else {
                                 //has commited
                                 console.log("sending savings error");
-                                sender.savingsError(phoneNumber);
+                                sender.savingsError(phoneNumber, twilioNumber);
                             }
                             console.log("user did not send number");
                         }
@@ -76,7 +81,7 @@ module.exports = {
                                     function() {
                                         UserService.setCommitAmountForUserToday(phoneNumber, ''+saveAmount).then(
                                             function() {
-                                                sender.confirmation(phoneNumber, saveAmount);
+                                                sender.confirmation(phoneNumber, twilioNumber, saveAmount);
                                             }
                                         );
                                     }
@@ -92,10 +97,10 @@ module.exports = {
 
                                         UserService.getCommitAmountForUserToday(phoneNumber).then(function(commitAmount) {
                                             if (parseFloat(commitAmount)>totalAmount) {
-                                                sender.confirmSavings(phoneNumber, ''+(commitAmount-totalAmount),commitAmount);
+                                                sender.confirmSavings(phoneNumber, twilioNumber, ''+(commitAmount-totalAmount),commitAmount);
                                             }
                                             else {
-                                                sender.confirmSavingsGoalReached(phoneNumber, totalSavingsString,commitAmount)
+                                                sender.confirmSavingsGoalReached(phoneNumber, twilioNumber, totalSavingsString,commitAmount)
                                             }
 
                                             // Send message to user of their total savings so far today
