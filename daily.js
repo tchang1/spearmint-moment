@@ -17,20 +17,25 @@ module.exports = function() {
 			ftuSent=result[i].ftuSent;
 			console.log("Reading valid number\n"+"Number: "+number + "Savings: "+savings+"\n");
 			if (number!=undefined) {
-				if (ftuSent=="No" || savings=='0') {
-					sender.firstTimeUse(number);
-					userService.markFTUSent(number);
-					console.log("FTU sent");
-				}
-				else {
-				sender.dailyReminder(number,savings);
-				console.log("daily reminder sent");
-				}
+
 				userService.setSavedAmountForUserToday(number,"0").then(
 				function() {
 					console.log("user amount set to 0");
-					userService.setCommitAmountForUserToday(number,"0");
+					userService.setCommitAmountForUserToday(number,"0").then(
+						function() {
+							if (ftuSent=="No" || savings=='0') {
+							sender.firstTimeUse(number);
+							userService.markFTUSent(number);
+							console.log("FTU sent");
+							}
+							else {
+							sender.dailyReminder(number,savings);
+							console.log("daily reminder sent");
+							}
+					});
 				});
+				
+
 			}
 			console.log("Daily reminder send and savings set to 0");
 		}
