@@ -1,0 +1,18 @@
+{
+  "name": "spearmint",
+  "version": "0.0.2",
+  "description": "moment-app2",
+  "main": "RESTService.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tchang1/spearmint-moment.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tchang1/spearmint-moment/issues"
+  }
+}
