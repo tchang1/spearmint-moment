@@ -13,7 +13,11 @@ module.exports = {
 
     signup: function(req, res) {
         var number = req.params.number;
-        UserService.createUser(number, variant);
+        UserService.createUser(number, variant).then(
+            function(user) {
+                sender.setUp(user.number, twilioNumber);    
+            });
+        
         res.send('');
     },
 
@@ -23,95 +27,67 @@ module.exports = {
 
         var phoneNumber = req.body.From;
         var message = req.body.Body;
-
+        var variant = 'variant2';
         var saveAmount = parseFloat((message).replace("$",""));
 
         console.log("Message received");
         console.log(message);
         console.log("save amount= "+saveAmount);
-
-        UserService.hasReceivedFTU(phoneNumber).then(function(ftuSent) {
-            if (ftuSent=="No") {
-                console.log("User responded before FTU sent, NOW PANIC AND FREAK OUT");
-                sender.setUpResponse(phoneNumber, twilioNumber);
+        UserService.getUser(phoneNumber,variant).then(function(user) {
+            
+            switch(user.state) {
+                //state 0 ftu not sent
+                //state 1 Daily sent, no response
+                //state 2 Daily sent, reponse received, evening not sent yet
+                //state 3 Daily sent, response received, evening sent, no response
+                //state 4 Daily sent, response received, evening sent, response received
+                case '0':
+                console.log("FTU not sent, sending excited message");
+                sender.setUpResponse(phoneNumber,twilioNumber);
+                break;
+                case '1':
+                if (isNaN(saveAmount)) {
+                    sender.commitError(phoneNumber,twilioNumber);
+                }
+                else {
+                    user.commitAmount=''+saveAmount;
+                    user.savedToday=''+(parseFloat(user.savedToday)+saveAmount);
+                    user.state='2';
+                    sender.confirmationV2(phoneNumber,twilioNumber,''+commitAmount);
+                }
+                break;
+                case '2':
+                console.log("Evening not sent yet, sending excited message");
+                sender.commitResponseV2(phoneNumber,twilioNumber);
+                break;
+                case '3':
+                if (message=='y' || message=='Y') {
+                    console.log("User Responded with y");
+                    sender.endOfDayV2YesResponse(phoneNumber,twilioNumber,user.savedToday,''+(parseFloat(user.savedToday)*365));
+                    user.state='4';
+                    user.totalPutAside=''+(parseFloat(user.totalPutAside)+parseFloat(user.savedToday));
+                }
+                else if (message=='n' || message=='N'){
+                    console.log("User repsonded with n");
+                    sender.endOfDayV2NoResponse(phoneNumber,twilioNumber);
+                    user.state='4';
+                }
+                else {
+                    console.log("Couldn't parse y/n from reponse");
+                    sender.endOfDayV2Error(phoneNumber,twilioNumber);
+                }
+                break;
+                case '4':
+                console.log("Daily not sent, sending excited message");
+                sender.setUpResponse(phoneNumber,twilioNumber);
+                break;
             }
-            else {
-                // If we successfully got a number from the user
-                UserService.hasRespondedToMostRecentPrompt(phoneNumber).then(
-                    function(result){
-                        if (isNaN(saveAmount)) { // If we cannot parse the message to get a number
-                            if (result =="No") {
-                                //has not commited
-                                console.log("sending commit error");
-                                sender.commitError(phoneNumber, twilioNumber);
-                            }
-                            else {
-                                //has commited
-                                console.log("sending savings error");
-                                sender.savingsError(phoneNumber, twilioNumber);
-                            }
-                            console.log("user did not send number");
-                        }
-                        else {
-                            console.log("user sent number "+phoneNumber+", will try to respond");
-
-                            if (result == 'No') {
-                                console.log("User has not commited, sending commit confirmation");
-                                UserService.setRespondedToMostRecentPrompt(phoneNumber).then(
-                                    function() {
-                                        UserService.setCommitAmountForUserToday(phoneNumber, ''+saveAmount).then(
-                                            function() {
-                                                sender.confirmation(phoneNumber, twilioNumber, saveAmount);
-                                            }
-                                        );
-                                    }
-                                );
-                            } else {
-                                console.log("User already committed, incrementing saved amount");
-                                UserService.getSavedAmountForUserToday(phoneNumber).then(
-                                    function(amount){
-                                        console.log("Amount from db: "+amount);
-                                        var floatAmount = parseFloat(amount);
-                                        var totalAmount = saveAmount + floatAmount;
-                                        var totalSavingsString = '' + totalAmount;
-
-                                        UserService.getCommitAmountForUserToday(phoneNumber).then(function(commitAmount) {
-                                            if (parseFloat(commitAmount)>totalAmount) {
-                                                sender.confirmSavings(phoneNumber, twilioNumber, ''+(commitAmount-totalAmount),commitAmount);
-                                            }
-                                            else {
-                                                sender.confirmSavingsGoalReached(phoneNumber, twilioNumber, totalSavingsString,commitAmount)
-                                            }
-
-                                            // Send message to user of their total savings so far today
-
-                                            UserService.setSavedAmountForUserToday(phoneNumber, totalSavingsString).then(function() {
-                                                console.log("amount user has saved today: " + totalSavingsString);
-
-                                                UserService.getTotalSavedAmountForUser(phoneNumber).then(
-                                                    function(amount){
-                                                        var floatAmount = parseFloat(amount);
-                                                        var totalAmount = saveAmount + floatAmount;
-                                                        var totalSavingsString = '' + totalAmount;
-
-                                                        UserService.setTotalSavedAmountForUser(phoneNumber, totalSavingsString).then(function() {
-                                                            console.log("amount user has  saved total: " + totalSavingsString);
-
-                                                        });
-
-                                                    });
-                                            });
-                                        });
-                                    });
-                            }
-                        }
-                    },
-                    function(err) {
-                        console.log(err);
-                    });
-
-            }
+            UserService.saveUser(user,variant);
+        },
+        function(err) {
+            console.log(err);
         });
+           
         res.send('');
     }
 };
