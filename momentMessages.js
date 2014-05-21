@@ -64,6 +64,36 @@ module.exports = {
 		});
 	},
 
+	commitedResponseV2: function(phoneNumber, twilioNumber) {
+		//Send an SMS text message
+		client.sendMessage({
+
+		    to: phoneNumber, // User phone number 
+		    from: twilioNumber, // Our Twilio number
+		    body: 'We\'re excited too! Expect to hear from us this evening to check up on your progress.' // body of the SMS message
+
+		}, function(err, responseData) { //this function is executed when a response is received from Twilio
+
+		    if (!err) { // "err" is an error received during the request, if any
+
+		        // "responseData" is a JavaScript object containing data received from Twilio.
+		        // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
+		        // http://www.twilio.com/docs/api/rest/sending-sms#example-1
+
+		        //console.log(responseData.from); // outputs "+14506667788"
+		        //console.log(responseData.body); // outputs "word to your mother."
+		        var logmsg="Type: commitResponseV2 "+"From:"+responseData.from+" Body:"+responseData.body+" Direction:"+responseData.direction+ "SID:"+responseData.sid+'\n';
+		        fs.appendFile('msglog.txt',logmsg, function (err) {
+		        	if (err) return console.log(err);
+		        });
+
+		    }
+		    else {
+		    	fs.appendFile('errlog.txt',err);
+		    }
+		});
+	},
+
 	firstTimeUse: function(phoneNumber, twilioNumber) {
 		//Send an SMS text message
 		client.sendMessage({
