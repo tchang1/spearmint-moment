@@ -75,8 +75,8 @@ module.exports = {
             );
         }
         else {
-            console.log("User entered an invalid number "+req.params.number);
-            deferred.reject("User entered an invalid number "+req.params.number);
+            console.log("User entered an invalid number " + number);
+            deferred.reject("User entered an invalid number "+ number);
         }
 
         return deferred.promise;

@@ -19,18 +19,18 @@ module.exports = function() {
 
                 console.log("Reading valid number\n"+"Number: "+ user.number + "Savings: "+ user.savedToday+"\n");
                 if (user) {
-                    user.savedToday = 0;
-                    user.commitAmount = 0;
-
-                    if (user.ftuSent == "No" || user.savedToday =='0') {
+                    if (user.state == '0' || user.savedToday =='0') {
                         sender.firstTimeUseV2(user.number, variant2Number);
-                        user.ftuSent = 'Yes';
                         console.log("FTU sent");
                     }
                     else {
-                        sender.dailyReminder(user.number,user.savedToday, variant2Number);
+                        sender.dailyReminder(user.number, variant2Number, user.savedToday);
                         console.log("daily reminder sent");
                     }
+
+                    user.savedToday = 0;
+                    user.commitAmount = 0;
+                    user.state = '1';
                     userService.saveUser(user, 'variant2');
 			}
 			console.log("Daily reminder send and savings set to 0");
@@ -65,7 +65,7 @@ module.exports = function() {
                         console.log("FTU sent");
                     }
                     else {
-                        sender.dailyReminderV3(user.number,user.savedToday, variant3Number);
+                        sender.dailyReminderV3(user.number,variant3Number,user.savedToday);
                         console.log("daily reminder sent");
                     }
                     userService.saveUser(user, 'variant3');
