@@ -61,7 +61,7 @@ module.exports = {
                 break;
                 case '2':
                 console.log("Evening not sent yet, sending excited message");
-                sender.commitResponseV2(phoneNumber,twilioNumber);
+                sender.commitedResponseV2(phoneNumber,twilioNumber);
                 break;
                 case '3':
                 if (message=='y' || message=='Y') {
