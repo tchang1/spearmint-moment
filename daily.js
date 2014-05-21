@@ -57,7 +57,6 @@ module.exports = function() {
 
                 console.log("Reading valid number\n"+"Number: "+ user.number + "Savings: "+ user.savedToday+"\n");
                 if (user) {
-                    user.savedToday = 0;
 
                     if (user.ftuSent == "No" || user.savedToday =='0') {
                         sender.firstTimeUseV3(user.number, variant3Number);
@@ -68,6 +67,7 @@ module.exports = function() {
                         sender.dailyReminderV3(user.number,variant3Number,user.savedToday);
                         console.log("daily reminder sent");
                     }
+                    user.savedToday = 0;
                     userService.saveUser(user, 'variant3');
                 }
                 console.log("Daily reminder send and savings set to 0");
