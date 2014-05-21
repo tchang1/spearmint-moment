@@ -107,7 +107,7 @@ module.exports = {
         var databaseTable = databaseTableForVariant(variant);
 
         if (databaseTable) {
-            Database.findOne('databaseTable', {number:number}).then(
+            Database.findOne(databaseTable, {number:number}).then(
                 function(user) {
                     if (user) {
                         deferred.resolve(user);
@@ -132,7 +132,7 @@ module.exports = {
         var databaseTable = databaseTableForVariant(variant);
 
         if (databaseTable) {
-            Database.update(data, {number: user.number}, user).then(
+            Database.update(databaseTable, {number: user.number}, user).then(
                 function(success) {
                     deferred.resolve(success);
                 },
