@@ -42,10 +42,10 @@ module.exports = {
                         if (variant == variant2) {
                             user = {
                                 number: number,
-                                ftuSent: "No",
                                 totalSaved: "0",
-                                respondedToCommit: "No",
-                                commitAmount: "0"
+                                state: "0",
+                                commitAmount: "0",
+                                totalPutAside: "0"
                             };
                         }
                         if (variant == variant3) {
