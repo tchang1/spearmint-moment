@@ -82,9 +82,15 @@ module.exports = {
         return deferred.promise;
     },
 
-    getAllValidNumbers: function(){
+    getAllValidNumbers: function(variant){
         var deferred = Q.defer();
-        Database.find('users', {}).then(
+
+        var databaseTable = databaseTableForVariant(variant);
+        if (!databaseTable) {
+            console.log('Invalid variant. Aborting');
+            return null;
+        }
+        Database.find(databaseTable, {}).then(
             function(validNumbers) {
                 deferred.resolve(validNumbers);
             },
@@ -139,5 +145,23 @@ module.exports = {
         }
 
         return deferred.promise;
-    }
+    },
+
+    resetAllUserPrompts: function(variant) {
+        var deferred = Q.defer();
+        var databaseTable = databaseTableForVariant(variant);
+        if (!databaseTable) {
+            console.log('Invalid variant. Aborting.');
+            return null;
+        }
+        Database.updateAll(databaseTable, {}, {$set: {respondedToCommit:"No"}}).then(
+            function(success) {
+                deferred.resolve(success);
+            },
+            function(error) {
+                deferred.reject(error);
+            }
+        );
+        return deferred.promise;
+    },
 };
