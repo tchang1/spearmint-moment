@@ -62,7 +62,7 @@ module.exports = {
                     UserService.saveUser(user, variant);
 
                 }
-            }, 
+            } 
         }, 
         function(err) {
             console.log(err);
