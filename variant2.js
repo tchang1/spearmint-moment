@@ -46,10 +46,13 @@ module.exports = {
                 sender.setUpResponse(phoneNumber,twilioNumber);
                 break;
                 case '1':
+                console.log("state 1");
                 if (isNaN(saveAmount)) {
+                    console.log("NaN received");
                     sender.commitError(phoneNumber,twilioNumber);
                 }
                 else {
+                    console.log("Commit received");
                     user.commitAmount=''+saveAmount;
                     user.savedToday=''+(parseFloat(user.savedToday)+saveAmount);
                     user.state='2';
