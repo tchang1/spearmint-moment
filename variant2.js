@@ -56,7 +56,7 @@ module.exports = {
                     user.commitAmount=''+saveAmount;
                     user.savedToday=''+(parseFloat(user.savedToday)+saveAmount);
                     user.state='2';
-                    sender.confirmationV2(phoneNumber,twilioNumber,''+commitAmount);
+                    sender.confirmationV2(phoneNumber,twilioNumber,''+user.commitAmount);
                 }
                 break;
                 case '2':
