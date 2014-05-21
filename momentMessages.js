@@ -460,7 +460,7 @@ module.exports = {
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
-		    body: 'Congratulations!  By saving ' +utility.formatCurrency(todaySavings)+ ' everyday you will have saved ' +utility.formatCurrency(yearSavings)' in a year!' // body of the SMS message
+		    body: 'Congratulations!  By saving ' +utility.formatCurrency(todaySavings)+ ' everyday you will have saved ' +utility.formatCurrency(yearSavings) + ' in a year!' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 

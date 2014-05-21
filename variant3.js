@@ -13,7 +13,10 @@ module.exports = {
 
     signup: function(req, res) {
         var number = req.params.number;
-        UserService.createUser(number, variant);
+        UserService.createUser(number, variant).then(
+            function(user) {
+                sender.setUp(user.number, twilioNumber);    
+            });
         res.send('');
     },
 
@@ -30,88 +33,37 @@ module.exports = {
         console.log(message);
         console.log("save amount= "+saveAmount);
 
-        UserService.hasReceivedFTU(phoneNumber).then(function(ftuSent) {
-            if (ftuSent=="No") {
+        UserService.getUser(phoneNumer, variant).then(function(user) {
+            if (user.ftuSent == "No") {
                 console.log("User responded before FTU sent, NOW PANIC AND FREAK OUT");
                 sender.setUpResponse(phoneNumber, twilioNumber);
-            }
-            else {
-                // If we successfully got a number from the user
-                UserService.hasRespondedToMostRecentPrompt(phoneNumber).then(
-                    function(result){
-                        if (isNaN(saveAmount)) { // If we cannot parse the message to get a number
-                            if (result =="No") {
-                                //has not commited
-                                console.log("sending commit error");
-                                sender.commitError(phoneNumber, twilioNumber);
-                            }
-                            else {
-                                //has commited
-                                console.log("sending savings error");
-                                sender.savingsError(phoneNumber, twilioNumber);
-                            }
-                            console.log("user did not send number");
-                        }
-                        else {
-                            console.log("user sent number "+phoneNumber+", will try to respond");
+            } else { 
+                if (isNaN(saveAmount)) { // If we cannot parse the message to get a number
+                    console.log("sending savings error");
+                    sender.savingsError(phoneNumber, twilioNumber);
+                    console.log("user did not send number");
+                } else {
+                    var amount = user.savedToday; 
+                    console.log("Amount from db: "+amount);
 
-                            if (result == 'No') {
-                                console.log("User has not commited, sending commit confirmation");
-                                UserService.setRespondedToMostRecentPrompt(phoneNumber).then(
-                                    function() {
-                                        UserService.setCommitAmountForUserToday(phoneNumber, ''+saveAmount).then(
-                                            function() {
-                                                sender.confirmation(phoneNumber, twilioNumber, saveAmount);
-                                            }
-                                        );
-                                    }
-                                );
-                            } else {
-                                console.log("User already committed, incrementing saved amount");
-                                UserService.getSavedAmountForUserToday(phoneNumber).then(
-                                    function(amount){
-                                        console.log("Amount from db: "+amount);
-                                        var floatAmount = parseFloat(amount);
-                                        var totalAmount = saveAmount + floatAmount;
-                                        var totalSavingsString = '' + totalAmount;
+                    var floatAmount = parseFloat(amount);
+                    var totalAmount = saveAmount + floatAmount;
+                    var totalSavingsStringToday = '' + totalAmount;
 
-                                        UserService.getCommitAmountForUserToday(phoneNumber).then(function(commitAmount) {
-                                            if (parseFloat(commitAmount)>totalAmount) {
-                                                sender.confirmSavings(phoneNumber, twilioNumber, ''+(commitAmount-totalAmount),commitAmount);
-                                            }
-                                            else {
-                                                sender.confirmSavingsGoalReached(phoneNumber, twilioNumber, totalSavingsString,commitAmount)
-                                            }
+                    // send savings message 
+                    sender.confirmSavingsV3(phoneNumber, twilioNumber, totalSavingsStringToday);
 
-                                            // Send message to user of their total savings so far today
+                    // save the total saved today amount to the db 
+                    user.savedToday = totalSavingsStringToday; 
+                    var totalSavedNumber = totalAmount + parseFloat(user.totalSaved); 
+                    user.totalSaved = '' + totalSavedNumber; 
 
-                                            UserService.setSavedAmountForUserToday(phoneNumber, totalSavingsString).then(function() {
-                                                console.log("amount user has saved today: " + totalSavingsString);
+                    UserService.saveUser(user, variant);
 
-                                                UserService.getTotalSavedAmountForUser(phoneNumber).then(
-                                                    function(amount){
-                                                        var floatAmount = parseFloat(amount);
-                                                        var totalAmount = saveAmount + floatAmount;
-                                                        var totalSavingsString = '' + totalAmount;
-
-                                                        UserService.setTotalSavedAmountForUser(phoneNumber, totalSavingsString).then(function() {
-                                                            console.log("amount user has  saved total: " + totalSavingsString);
-
-                                                        });
-
-                                                    });
-                                            });
-                                        });
-                                    });
-                            }
-                        }
-                    },
-                    function(err) {
-                        console.log(err);
-                    });
-
+                }
             }
         });
-        res.send('');
     }
+
+        
 };
