@@ -33,7 +33,7 @@ module.exports = {
         console.log(message);
         console.log("save amount= "+saveAmount);
 
-        UserService.getUser(phoneNumer, variant).then(function(user) {
+        UserService.getUser(phoneNumber, variant).then(function(user) {
             if (user.ftuSent == "No") {
                 console.log("User responded before FTU sent, NOW PANIC AND FREAK OUT");
                 sender.setUpResponse(phoneNumber, twilioNumber);
