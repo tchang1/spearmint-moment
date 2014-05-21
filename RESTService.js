@@ -14,9 +14,9 @@ exports.signup = function(req, res) {
 exports.receivedMessage = function(req, res) {
     var variant = req.params.variant;
     if ('variant2' == variant) {
-        variant2.recieveMessage(req, res);
+        variant2.receiveMessage(req, res);
     }
     else if ('variant3' == variant) {
-        variant3.recieveMessage(req, res);
+        variant3.receiveMessage(req, res);
     }
 };

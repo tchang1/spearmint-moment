@@ -21,7 +21,7 @@ module.exports = {
         res.send('');
     },
 
-    recieveMessage: function(req, res) {
+    receiveMessage: function(req, res) {
         console.log("receiving message, req: ");
         //console.log(req);
 
