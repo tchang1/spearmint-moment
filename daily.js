@@ -5,17 +5,15 @@ var variant2Number = '+14154634615';
 var variant3Number = '+14157428555';
 
 module.exports = function() {
-	userService.getAllValidNumbers('variant2').then( function(result) {
-        var user;
-
-        console.log(result.length +" users found");
+	userService.getAllValidNumbers('variant2').then( function(users) {
+        console.log(users.length +" users found");
 
 		userService.resetAllUserPrompts('variant2').then(function() {
 			console.log("Commit variables set to no");
             var i;
 
-			for (i=0; i<result.length; i++) {
-                user = result[i];
+			for (i=0; i<users.length; i++) {
+                var user = users[i];
 
                 console.log("Reading valid number\n"+"Number: "+ user.number + "Savings: "+ user.savedToday+"\n");
                 if (user) {
