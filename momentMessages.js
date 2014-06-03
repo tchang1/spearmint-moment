@@ -574,13 +574,13 @@ module.exports = {
 		});	
 	},
 
-	final: function(phoneNumber, twilioNumber, totalSavings) {
+	final_message: function(phoneNumber, twilioNumber, totalSavings) {
 		//Send an SMS text message
 		client.sendMessage({
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
-		    body: 'You\'ve saved ' + utility.formatCurrency(totalSavings) + ' this week. Amazing! Thank you so much for participating in these savings Moments with us. If you would be willing to talk on phone with us about your experience reply \'Yes\'' // body of the SMS message
+		    body: 'Thank you so much for using Moment, we hope it has helped you save towards the things that matter. We would love to get your ideas and input on how to make this product better for you. Please allow for one of our product managers to contact you over the next few days for your valued thoughts.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
