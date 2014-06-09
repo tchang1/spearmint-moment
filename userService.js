@@ -1,9 +1,11 @@
 var Database = require('./databaseCommunications');
 var Q = require('q');
 
+var variant1DB = 'usersVariant1';
 var variant2DB = 'usersVariant2';
 var variant3DB = 'usersVariant3';
 
+var variant1 = 'variant1';
 var variant2 = 'variant2';
 var variant3 = 'variant3';
 
@@ -14,6 +16,9 @@ var databaseTableForVariant = function(variant) {
     }
     else if (variant == variant3) {
         returnValue = variant3DB;
+    }
+    else if (variant == variant1) {
+        returnValue = variant1DB;
     }
     return returnValue;
 };
@@ -39,6 +44,15 @@ module.exports = {
                 function(success) {
                     if (!success) {
                         var user;
+                        if (variant == variant1) {
+                            user = {
+                                number: number,
+                                totalSaved: "0",
+                                state: "0",
+                                commitAmount: "0",
+                                savedToday: "0"
+                            };
+                        }
                         if (variant == variant2) {
                             user = {
                                 number: number,
