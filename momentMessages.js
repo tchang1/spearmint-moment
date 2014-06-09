@@ -10,7 +10,7 @@ module.exports = {
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber,
-		    body: 'Thanks for setting up Moment! We’ll send you your first reminder tomorrow morning. You can reply STOP at any time to opt-out. Love, the Mint team.' // body of the SMS message
+		    body: 'Thanks for setting up Moment! We\'re here to help you be more deliberate about your spending and save money towards the things that matter. We’ll be sending you your first reminder tomorrow morning! You can reply STOP at any time to opt-out. Love, the Mint team.' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -130,7 +130,7 @@ module.exports = {
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
-		    body: 'Good morning! Respond with an amount you want to save today.' // body of the SMS message
+		    body: 'Good morning! Respond with an amount you aim to save today and we\'ll help you reach that target' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -190,7 +190,7 @@ module.exports = {
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
-		    body: 'Great! Text us an amount when you choose to save on the little things (skipping coffee). We\'ll let you know how you are doing towards your goal of ' + utility.formatCurrency(commitAmount) // body of the SMS message
+		    body: 'Great! Throughout the day, text us an amount when you choose to save on the little things (skipping coffee). We\'ll let you know how you are doing towards your goal of ' + utility.formatCurrency(commitAmount) // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -430,7 +430,7 @@ module.exports = {
 
 		    to: phoneNumber, // User phone number 
 		    from: twilioNumber, // Our Twilio number
-		    body: 'You saved ' + utility.formatCurrency(yesterdaySavings) + ' yesterday. That’s awesome! How much would you like to save today?' // body of the SMS message
+		    body: 'Good morning! You saved ' + utility.formatCurrency(yesterdaySavings) + ' yesterday. That’s awesome! How much will you aim to save today?' // body of the SMS message
 
 		}, function(err, responseData) { //this function is executed when a response is received from Twilio
 
